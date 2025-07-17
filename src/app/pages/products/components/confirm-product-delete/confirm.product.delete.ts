@@ -1,9 +1,9 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
-  MatDialog,
   MatDialogModule,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import { ProductService } from '../../services/product.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -14,18 +14,18 @@ import { HttpErrorResponse } from '@angular/common/http';
   imports: [MatDialogModule, MatButtonModule],
 })
 export class ConfirmProductDeleteComponent {
-  readonly dialog = inject(MatDialog);
-
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { productId: number; productName: string },
-    private productService: ProductService
+    private productService: ProductService,
+    private dialogRef: MatDialogRef<ConfirmProductDeleteComponent>
   ) {}
 
   deleteProduct() {
     this.productService.delete(this.data.productId).subscribe({
       next: () => {
         console.log('deletado');
+        this.dialogRef.close();
       },
       error: (error: HttpErrorResponse) => {
         console.error(error);

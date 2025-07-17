@@ -27,6 +27,12 @@ export class ProductService {
       .pipe(take(1));
   }
 
+  put(product: IProductItem): Observable<IProductItem> {
+    return this.http
+      .put<IProductItem>(`${this.API_URL}/products/${product.id}`, product)
+      .pipe(take(1));
+  }
+
   delete(id: number): Observable<IProductItem> {
     return this.http
       .delete<IProductItem>(`${this.API_URL}/products/${id}`)

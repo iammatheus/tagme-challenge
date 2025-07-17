@@ -24,7 +24,11 @@
 
       <td mat-cell *matCellDef="let element">
         <div class="d-flex gap-2">
-          <button matIconButton type="button">
+          <button
+            matIconButton
+            type="button"
+            (click)="openProductEditModal(element)"
+          >
             <mat-icon
               matTooltip="Editar produto"
               aria-label="Ícone de editar"

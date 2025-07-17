@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmProductDeleteComponent } from '../confirm-product-delete/confirm.product.delete';
+import { ProductModalComponent } from '../product-modal/product-modal';
 
 @Component({
   selector: 'product-table',
@@ -61,6 +62,13 @@ export class ProductTableComponent {
       error: (error: HttpErrorResponse) => {
         console.error(error);
       },
+    });
+  }
+
+  openProductEditModal(product: IProductItem) {
+    this.matDialog.open(ProductModalComponent, {
+      width: '600px',
+      data: product,
     });
   }
 

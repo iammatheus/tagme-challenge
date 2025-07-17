@@ -1,4 +1,6 @@
-<h2 mat-dialog-title>Cadastrar Produto</h2>
+<h2 mat-dialog-title>
+  {{ this.data ? "Editar produto" : "Cadastrar produto" }}
+</h2>
 <mat-dialog-content class="p-4">
   <form [formGroup]="form">
     <div class="d-flex flex-column gap-2">
@@ -29,7 +31,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button matButton mat-dialog-close cdkFocusInitial>Cancelar</button>
-  <button matButton [disabled]="form.invalid" (click)="postProduct()">
-    Cadastrar
+  <button matButton [disabled]="form.invalid" (click)="submitProduct()">
+    Confirmar
   </button>
 </mat-dialog-actions>

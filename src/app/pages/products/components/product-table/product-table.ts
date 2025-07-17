@@ -19,7 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class ProductTableComponent {
   data$ = of<IProductItem[]>([]);
-  displayedColumns = ['id', 'name', 'description', 'image'];
+  displayedColumns = ['name', 'description', 'image'];
   totalItems = 0;
   pageSize = 5;
 

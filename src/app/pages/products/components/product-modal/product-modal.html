@@ -1,1 +1,35 @@
-<h2>Modal</h2>
+<h2 mat-dialog-title>Cadastrar Produto</h2>
+<mat-dialog-content class="p-4">
+  <form [formGroup]="form">
+    <div class="d-flex flex-column gap-2">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input
+          matInput
+          placeholder="Insira um nome para o produto"
+          formControlName="name"
+        />
+        @if (form.controls['name'].invalid) {
+        <mat-error>Nome é obrigatório.</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Descrição</mat-label>
+        <textarea
+          matInput
+          placeholder="Insira uma descrição para o produto"
+          formControlName="description"
+        ></textarea>
+        @if (form.controls['description'].invalid) {
+        <mat-error>Descrição é obrigatória.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton mat-dialog-close cdkFocusInitial>Cancelar</button>
+  <button matButton [disabled]="form.invalid" (click)="postProduct()">
+    Cadastrar
+  </button>
+</mat-dialog-actions>

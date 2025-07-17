@@ -11,21 +11,38 @@ import { ProductService } from '../../services/product.service';
 import { of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmProductDeleteComponent } from '../confirm-product-delete/confirm.product.delete';
 
 @Component({
   selector: 'product-table',
   templateUrl: './product-table.html',
-  imports: [MatTableModule, MatCardModule, MatPaginatorModule, AsyncPipe],
+  imports: [
+    MatTableModule,
+    MatCardModule,
+    MatPaginatorModule,
+    AsyncPipe,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+  ],
+  styleUrl: './styles.scss',
 })
 export class ProductTableComponent {
   data$ = of<IProductItem[]>([]);
-  displayedColumns = ['name', 'description', 'image'];
+  displayedColumns = ['name', 'description', 'image', 'actions'];
   totalItems = 0;
   pageSize = 5;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private matDialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.getProductList(1, this.pageSize);
@@ -44,6 +61,13 @@ export class ProductTableComponent {
       error: (error: HttpErrorResponse) => {
         console.error(error);
       },
+    });
+  }
+
+  openProductDeleteModal(productId: number, productName: string) {
+    this.matDialog.open(ConfirmProductDeleteComponent, {
+      width: '600px',
+      data: { productId, productName },
     });
   }
 }

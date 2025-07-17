@@ -20,13 +20,14 @@ html {
 }
 
 body {
-  -webkit-font-smoothing: antialised;
   background-color: transparent;
 }
 
+html,
 body,
 input,
 textarea,
 button {
   font: 400 1rem Roboto, sans-serif;
+  -webkit-font-smoothing: antialised;
 }

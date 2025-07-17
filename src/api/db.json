@@ -1,0 +1,94 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Produto 1",
+      "description": "Descrição do produto 1",
+      "imagem": ""
+    },
+    {
+      "id": "2",
+      "name": "Produto 2",
+      "description": "Descrição do produto 2",
+      "imagem": ""
+    },
+    {
+      "id": "3",
+      "name": "Produto 3",
+      "description": "Descrição do produto 3",
+      "imagem": ""
+    },
+    {
+      "id": "4",
+      "name": "Produto 4",
+      "description": "Descrição do produto 4",
+      "imagem": ""
+    },
+    {
+      "id": "5",
+      "name": "Produto 5",
+      "description": "Descrição do produto 5",
+      "imagem": ""
+    },
+    {
+      "id": "6",
+      "name": "Produto 6",
+      "description": "Descrição do produto 6",
+      "imagem": ""
+    },
+    {
+      "id": "7",
+      "name": "Produto 7",
+      "description": "Descrição do produto 7",
+      "imagem": ""
+    },
+    {
+      "id": "8",
+      "name": "Produto 8",
+      "description": "Descrição do produto 8",
+      "imagem": ""
+    },
+    {
+      "id": "9",
+      "name": "Produto 9",
+      "description": "Descrição do produto 9",
+      "imagem": ""
+    },
+    {
+      "id": "10",
+      "name": "Produto 10",
+      "description": "Descrição do produto 10",
+      "imagem": ""
+    },
+    {
+      "id": "11",
+      "name": "Produto 11",
+      "description": "Descrição do produto 11",
+      "imagem": ""
+    },
+    {
+      "id": "12",
+      "name": "Produto 12",
+      "description": "Descrição do produto 12",
+      "imagem": ""
+    },
+    {
+      "id": "13",
+      "name": "Produto 13",
+      "description": "Descrição do produto 13",
+      "imagem": ""
+    },
+    {
+      "id": "14",
+      "name": "Produto 14",
+      "description": "Descrição do produto 14",
+      "imagem": ""
+    },
+    {
+      "id": "15",
+      "name": "Produto 15",
+      "description": "Descrição do produto 15",
+      "imagem": ""
+    }
+  ]
+}

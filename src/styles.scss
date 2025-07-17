@@ -1,5 +1,4 @@
 @use "@angular/material" as mat;
-@use "tailwindcss";
 
 html {
   @include mat.theme(
@@ -22,6 +21,7 @@ html {
 
 body {
   -webkit-font-smoothing: antialised;
+  background-color: transparent;
 }
 
 body,

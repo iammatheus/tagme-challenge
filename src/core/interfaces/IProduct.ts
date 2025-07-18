@@ -9,3 +9,9 @@ export interface IProduct {
   items: number;
   pages: number;
 }
+
+export interface IProductState {
+  products: IProduct;
+  loading: boolean;
+  error: string;
+}

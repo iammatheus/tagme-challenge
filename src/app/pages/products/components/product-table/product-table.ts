@@ -1,22 +1,30 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
-import { IProductItem } from '../../../../../core/interfaces/IProduct';
+import {
+  IProduct,
+  IProductItem,
+} from '../../../../../core/interfaces/IProduct';
 import { MatCardModule } from '@angular/material/card';
 import {
   MatPaginator,
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
-import { ProductService } from '../../services/product.service';
-import { of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmProductDeleteComponent } from '../confirm-product-delete/confirm.product.delete';
 import { ProductModalComponent } from '../product-modal/product-modal';
+import { Store } from '@ngrx/store';
+import { IAppState } from '../../../../../store/store.state';
+import { getProducts } from '../../../../../store/actions/product.actions';
+import {
+  selectLoading,
+  selectProductList,
+} from '../../../../../store/selectors/product.selectors';
 
 @Component({
   selector: 'product-table',
@@ -33,36 +41,28 @@ import { ProductModalComponent } from '../product-modal/product-modal';
   styleUrl: './styles.scss',
 })
 export class ProductTableComponent {
-  data$ = of<IProductItem[]>([]);
   displayedColumns = ['name', 'description', 'image', 'actions'];
-  totalItems = 0;
-  pageSize = 5;
+  startPageSize = 5;
+
+  loading$: Observable<boolean> = new Observable();
+  error$: Observable<string> = new Observable();
+  poducts$: Observable<IProduct> = new Observable();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(
-    private productService: ProductService,
-    private matDialog: MatDialog
-  ) {}
+  constructor(private matDialog: MatDialog, private store: Store<IAppState>) {}
 
   ngOnInit(): void {
-    this.getProductList(1, this.pageSize);
+    this.store.dispatch(getProducts({ pageIndex: 1, pageSize: 5 }));
+    this.loading$ = this.store.select(selectLoading);
+    this.poducts$ = this.store.select(selectProductList);
   }
 
   onPageChange(event: PageEvent): void {
-    this.getProductList(event.pageIndex + 1, event.pageSize);
-  }
-
-  getProductList(pageIndex: number, pageSize: number): void {
-    this.productService.get(pageIndex, pageSize).subscribe({
-      next: (res) => {
-        this.totalItems = res.items;
-        this.data$ = of(res.data);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error(error);
-      },
-    });
+    const { pageIndex, pageSize } = event;
+    this.store.dispatch(
+      getProducts({ pageIndex: pageIndex + 1, pageSize: pageSize })
+    );
   }
 
   openProductEditModal(product: IProductItem) {
@@ -72,10 +72,10 @@ export class ProductTableComponent {
     });
   }
 
-  openProductDeleteModal(productId: number, productName: string) {
+  openProductDeleteModal({ id, name }: IProductItem) {
     this.matDialog.open(ConfirmProductDeleteComponent, {
       width: '600px',
-      data: { productId, productName },
+      data: { id, name },
     });
   }
 }

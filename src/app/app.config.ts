@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  isDevMode,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -12,6 +13,7 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { ROOT_REDUCERS } from '../store/store.state';
 import { EFFECTS } from '../store/effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,5 +24,13 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideStore(ROOT_REDUCERS),
     provideEffects(EFFECTS),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      autoPause: true,
+      trace: false,
+      traceLimit: 75,
+      connectInZone: false,
+    }),
   ],
 };

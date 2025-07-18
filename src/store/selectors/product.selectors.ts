@@ -4,17 +4,17 @@ import { IProductState } from '../../core/interfaces/IProduct';
 
 export const selectProducts = (state: IAppState) => state.products;
 
-export const selectLoading = createSelector(
+export const selectProductLoading = createSelector(
   selectProducts,
   (state: IProductState) => state.loading
 );
 
-export const selectProductList = createSelector(
+export const selectProduct = createSelector(
   selectProducts,
   (state: IProductState) => state.products
 );
 
-export const selectProductListError = createSelector(
+export const selectProductError = createSelector(
   selectProducts,
   (state: IProductState) => state.error
 );

@@ -22,8 +22,8 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '../../../../../store/store.state';
 import { getProducts } from '../../../../../store/actions/product.actions';
 import {
-  selectLoading,
-  selectProductList,
+  selectProductLoading,
+  selectProduct,
 } from '../../../../../store/selectors/product.selectors';
 
 @Component({
@@ -53,9 +53,11 @@ export class ProductTableComponent {
   constructor(private matDialog: MatDialog, private store: Store<IAppState>) {}
 
   ngOnInit(): void {
-    this.store.dispatch(getProducts({ pageIndex: 1, pageSize: 5 }));
-    this.loading$ = this.store.select(selectLoading);
-    this.poducts$ = this.store.select(selectProductList);
+    this.store.dispatch(
+      getProducts({ pageIndex: 1, pageSize: this.startPageSize })
+    );
+    this.loading$ = this.store.select(selectProductLoading);
+    this.poducts$ = this.store.select(selectProduct);
   }
 
   onPageChange(event: PageEvent): void {

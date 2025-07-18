@@ -16,15 +16,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class ConfirmProductDeleteComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { productId: number; productName: string },
+    public data: { id: number; name: string },
     private productService: ProductService,
     private dialogRef: MatDialogRef<ConfirmProductDeleteComponent>
   ) {}
 
   deleteProduct() {
-    this.productService.delete(this.data.productId).subscribe({
+    this.productService.delete(this.data.id).subscribe({
       next: () => {
-        console.log('deletado');
         this.dialogRef.close();
       },
       error: (error: HttpErrorResponse) => {

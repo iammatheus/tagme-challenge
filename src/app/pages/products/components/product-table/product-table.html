@@ -1,5 +1,5 @@
 <mat-card class="p-4 bg-transparent">
-  @if(products().data.length > 0) {
+  <product-filter />
   <table mat-table [dataSource]="products().data" class="bg-transparent mb-4">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Nome</th>
@@ -53,6 +53,11 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 
+  @if(products().data.length === 0) {
+  <div class="d-flex justify-content-center align-items-center p-5">
+    <h5>Nenhum produto encontrado.</h5>
+  </div>
+  } @if(products().data.length > 0) {
   <mat-paginator
     [length]="products().items"
     [pageSize]="startPageSize"
@@ -60,9 +65,5 @@
     (page)="onPageChange($event)"
   >
   </mat-paginator>
-  }@else {
-  <div class="d-flex justify-content-center align-items-center">
-    <h5>Nenhum produto encontrado.</h5>
-  </div>
   }
 </mat-card>

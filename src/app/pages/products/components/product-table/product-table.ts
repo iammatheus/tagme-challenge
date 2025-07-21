@@ -1,9 +1,6 @@
-import { Component, inject, Signal, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
-import {
-  IProduct,
-  IProductItem,
-} from '../../../../../core/interfaces/IProduct';
+import { IProductItem } from '../../../../../core/interfaces/IProduct';
 import { MatCardModule } from '@angular/material/card';
 import {
   MatPaginator,
@@ -17,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmProductDeleteComponent } from '../confirm-product-delete/confirm.product.delete';
 import { ProductModalComponent } from '../product-modal/product-modal';
 import { ProductStore } from '../../store/product.store';
+import { ProductFilterComponent } from '../product-filter/product-filter';
 
 @Component({
   selector: 'product-table',
@@ -28,6 +26,7 @@ import { ProductStore } from '../../store/product.store';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
+    ProductFilterComponent,
   ],
   styleUrl: './styles.scss',
 })

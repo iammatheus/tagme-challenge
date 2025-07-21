@@ -4,24 +4,24 @@ import { IProduct, IProductItem } from '../../../../core/interfaces/IProduct';
 
 @Injectable({ providedIn: 'root' })
 export class ProductStore {
-  private readonly productService = inject(ProductService);
-
-  pageIndex = signal(1);
-  pageSize = signal(5);
-  loading = signal(false);
-
-  private cache = new Map<number, IProduct>();
-  products = signal<IProduct>({
+  private initialState = {
     data: [],
     items: 0,
     pages: 0,
     prev: 0,
-  });
+  };
+
+  private productService = inject(ProductService);
+  private cache = new Map<number, IProduct>();
+  private pageIndex = signal<number>(1);
+  private pageSize = signal<number>(5);
+
+  loading = signal<boolean>(false);
+  products = signal<IProduct>(this.initialState);
 
   readonly loadProductsEffect = effect(() => {
     const page = this.pageIndex();
     const size = this.pageSize();
-
     const cached = this.cache.get(page);
 
     if (cached) {

@@ -44,7 +44,6 @@ export class ProductModalComponent {
   products!: Signal<IProduct>;
 
   constructor(
-    private productService: ProductService,
     private dialogRef: MatDialogRef<ProductModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data?: IProductItem
   ) {}

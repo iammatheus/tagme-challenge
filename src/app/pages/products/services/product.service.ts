@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, take } from 'rxjs';
 import { environment as env } from '../../../../environments/environment.local';
@@ -11,14 +11,13 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   get(page: number, itemsPerPage: number): Observable<IProduct> {
+    const params = new HttpParams()
+      .set('_page', page)
+      .set('_per_page', itemsPerPage);
+
     return this.http
       .get<IProduct>(`${this.API_URL}/products`, {
-        params: {
-          _page: page,
-          _per_page: itemsPerPage,
-          _sort: 'createdAt',
-          _order: 'desc',
-        },
+        params,
       })
       .pipe(take(1));
   }

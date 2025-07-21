@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, Signal, ViewChild } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import {
   IProduct,
@@ -10,21 +10,13 @@ import {
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
-import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmProductDeleteComponent } from '../confirm-product-delete/confirm.product.delete';
 import { ProductModalComponent } from '../product-modal/product-modal';
-import { Store } from '@ngrx/store';
-import { IAppState } from '../../../../../store/store.state';
-import { getProducts } from '../../../../../store/actions/product.actions';
-import {
-  selectProductLoading,
-  selectProduct,
-} from '../../../../../store/selectors/product.selectors';
+import { ProductStore } from '../../store/product.store';
 
 @Component({
   selector: 'product-table',
@@ -33,7 +25,6 @@ import {
     MatTableModule,
     MatCardModule,
     MatPaginatorModule,
-    AsyncPipe,
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
@@ -41,30 +32,27 @@ import {
   styleUrl: './styles.scss',
 })
 export class ProductTableComponent {
+  productStore = inject(ProductStore);
+
   displayedColumns = ['name', 'description', 'image', 'actions'];
   startPageSize = 5;
 
-  loading$: Observable<boolean> = new Observable();
-  error$: Observable<string> = new Observable();
-  poducts$: Observable<IProduct> = new Observable();
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private matDialog: MatDialog, private store: Store<IAppState>) {}
+  constructor(private matDialog: MatDialog) {}
+
+  readonly products = this.productStore.products;
+  readonly loading = this.productStore.loading;
 
   ngOnInit(): void {
-    this.store.dispatch(
-      getProducts({ pageIndex: 1, pageSize: this.startPageSize })
-    );
-    this.loading$ = this.store.select(selectProductLoading);
-    this.poducts$ = this.store.select(selectProduct);
+    this.productStore.setPage(1);
+    this.productStore.setPageSize(this.startPageSize);
   }
 
   onPageChange(event: PageEvent): void {
     const { pageIndex, pageSize } = event;
-    this.store.dispatch(
-      getProducts({ pageIndex: pageIndex + 1, pageSize: pageSize })
-    );
+    this.productStore.setPage(pageIndex + 1);
+    this.productStore.setPageSize(pageSize);
   }
 
   openProductEditModal(product: IProductItem) {

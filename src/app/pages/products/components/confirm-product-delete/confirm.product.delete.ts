@@ -1,12 +1,11 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { ProductService } from '../../services/product.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { ProductStore } from '../../store/product.store';
 
 @Component({
   selector: 'confirm-product-delete',
@@ -14,21 +13,16 @@ import { HttpErrorResponse } from '@angular/common/http';
   imports: [MatDialogModule, MatButtonModule],
 })
 export class ConfirmProductDeleteComponent {
+  productStore = inject(ProductStore);
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { id: number; name: string },
-    private productService: ProductService,
+    public data: { id: string; name: string },
     private dialogRef: MatDialogRef<ConfirmProductDeleteComponent>
   ) {}
 
   deleteProduct() {
-    this.productService.delete(this.data.id).subscribe({
-      next: () => {
-        this.dialogRef.close();
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error(error);
-      },
-    });
+    this.productStore.remove(this.data.id);
+    this.dialogRef.close();
   }
 }

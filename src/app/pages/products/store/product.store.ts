@@ -12,17 +12,32 @@ export class ProductStore {
   };
 
   private productService = inject(ProductService);
-  private cache = new Map<number, IProduct>();
+  private cache = new Map<string, IProduct>();
   private pageIndex = signal<number>(1);
   private pageSize = signal<number>(5);
 
   loading = signal<boolean>(false);
   products = signal<IProduct>(this.initialState);
 
+  private searchTerm = signal<string>('');
+
+  private buildCacheKey(page: number, size: number): string {
+    return `page=${page}&size=${size}`;
+  }
+
+  setSearchTerm(term: string) {
+    this.searchTerm.set(term);
+    this.cache.clear();
+    this.setPage(1);
+  }
+
   readonly loadProductsEffect = effect(() => {
     const page = this.pageIndex();
     const size = this.pageSize();
-    const cached = this.cache.get(page);
+    const term = this.searchTerm();
+
+    const cacheKey = this.buildCacheKey(page, size);
+    const cached = this.cache.get(cacheKey);
 
     if (cached) {
       this.products.set(cached);
@@ -30,10 +45,10 @@ export class ProductStore {
     }
 
     this.loading.set(true);
-    this.productService.get(page, size).subscribe({
+    this.productService.get(page, size, term).subscribe({
       next: (response) => {
         this.products.set(response);
-        this.cache.set(page, response);
+        this.cache.set(cacheKey, response);
         this.loading.set(false);
       },
       error: () => {
@@ -52,16 +67,29 @@ export class ProductStore {
 
   add(product: IProductItem) {
     this.loading.set(true);
+
     this.productService.post(product).subscribe({
       next: (created) => {
-        this.products.update(({ data, items, pages, prev }) => {
-          return {
-            data: [...data, created],
-            items: items + 1,
-            pages: pages,
-            prev: prev,
+        const page = this.pageIndex();
+        const size = this.pageSize();
+        const cacheKey = this.buildCacheKey(page, size);
+
+        this.products.update(({ data, items, pages, prev }) => ({
+          data: [created, ...data],
+          items: items + 1,
+          pages,
+          prev,
+        }));
+
+        const cached = this.cache.get(cacheKey);
+        if (cached) {
+          const updatedCache = {
+            ...cached,
+            data: [created, ...cached.data],
+            items: cached.items + 1,
           };
-        });
+          this.cache.set(cacheKey, updatedCache);
+        }
 
         this.loading.set(false);
       },
@@ -72,6 +100,10 @@ export class ProductStore {
   remove(id: string) {
     this.productService.delete(id).subscribe({
       next: () => {
+        const page = this.pageIndex();
+        const size = this.pageSize();
+        const cacheKey = this.buildCacheKey(page, size);
+
         this.products.update((res) => {
           const filteredProducts = res.data.filter(
             (product) => product.id !== id
@@ -80,6 +112,16 @@ export class ProductStore {
           if (filteredProducts.length === 0) {
             this.cache.clear();
             this.setPage(1);
+          } else {
+            const cached = this.cache.get(cacheKey);
+            if (cached) {
+              const updatedCache = {
+                ...cached,
+                data: filteredProducts,
+                items: cached.items - 1,
+              };
+              this.cache.set(cacheKey, updatedCache);
+            }
           }
 
           return {
@@ -89,6 +131,9 @@ export class ProductStore {
             prev: res.prev,
           };
         });
+      },
+      error: () => {
+        // Em caso de erro, mostrar um toast
       },
     });
   }
@@ -108,14 +153,17 @@ export class ProductStore {
           };
         });
 
-        const currentPage = this.pageIndex();
-        const cached = this.cache.get(currentPage);
+        const page = this.pageIndex();
+        const size = this.pageSize();
+        const cacheKey = this.buildCacheKey(page, size);
+        const cached = this.cache.get(cacheKey);
+
         if (cached) {
           const updatedCache = {
             ...cached,
             data: cached.data.map((p) => (p.id === updated.id ? updated : p)),
           };
-          this.cache.set(currentPage, updatedCache);
+          this.cache.set(cacheKey, updatedCache);
         }
 
         this.loading.set(false);

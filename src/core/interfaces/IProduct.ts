@@ -3,11 +3,14 @@ export interface IProductItem {
   name: string;
   description: string;
   image: string;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface IProduct {
   data: IProductItem[];
   items: number;
   pages: number;
+  prev: number;
 }
 
 export interface IProductState {

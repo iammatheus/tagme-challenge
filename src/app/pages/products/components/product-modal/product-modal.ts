@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject, Signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -13,15 +13,15 @@ import {
 } from '@angular/material/dialog';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { IProductItem } from '../../../../../core/interfaces/IProduct';
+import {
+  IProduct,
+  IProductItem,
+} from '../../../../../core/interfaces/IProduct';
 import { ProductService } from '../../services/product.service';
 
 import { v4 as uuidv4 } from 'uuid';
-import { Store } from '@ngrx/store';
-import { postProduct } from '../../../../../store/actions/product.actions';
 import { Observable } from 'rxjs';
-import { selectProductError } from '../../../../../store/selectors/product.selectors';
-import { IAppState } from '../../../../../store/store.state';
+import { ProductStore } from '../../store/product.store';
 
 @Component({
   selector: 'product-modal',
@@ -37,13 +37,15 @@ import { IAppState } from '../../../../../store/store.state';
   ],
 })
 export class ProductModalComponent {
+  productStore = inject(ProductStore);
+
   form!: FormGroup;
   $error: Observable<string> = new Observable();
+  products!: Signal<IProduct>;
 
   constructor(
     private productService: ProductService,
     private dialogRef: MatDialogRef<ProductModalComponent>,
-    private store: Store<IAppState>,
     @Inject(MAT_DIALOG_DATA) public data?: IProductItem
   ) {}
 
@@ -55,8 +57,6 @@ export class ProductModalComponent {
       ]),
       image: new FormControl(this.data?.image || ''),
     });
-
-    this.$error = this.store.select(selectProductError);
   }
 
   closeModal() {
@@ -65,7 +65,12 @@ export class ProductModalComponent {
   }
 
   postProduct(product: IProductItem) {
-    this.store.dispatch(postProduct({ product }));
+    this.productStore.add(product);
+    this.closeModal();
+  }
+
+  putProduct(product: IProductItem) {
+    this.productStore.update(product);
     this.closeModal();
   }
 
@@ -73,8 +78,10 @@ export class ProductModalComponent {
     const product: IProductItem = {
       ...this.form.value,
       id: this.data?.id ?? uuidv4(),
+      createdAt: this.data?.createdAt ?? new Date(),
+      updatedAt: this.data?.id ? new Date() : '',
     };
 
-    this.data ? this.productService.put(product) : this.postProduct(product);
+    this.data ? this.putProduct(product) : this.postProduct(product);
   }
 }

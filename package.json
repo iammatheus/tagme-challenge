@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "api": "npx json-server src/api/db.json",
+    "server": "npx json-server src/api/db.json",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -30,9 +30,6 @@
     "@angular/material": "^20.1.1",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
-    "@ngrx/effects": "^19.2.1",
-    "@ngrx/store": "^19.2.1",
-    "@ngrx/store-devtools": "^19.2.1",
     "bootstrap": "^5.3.7",
     "json-server": "^1.0.0-beta.3",
     "rxjs": "~7.8.0",

@@ -10,12 +10,14 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  get(page: number, limit: number): Observable<IProduct> {
+  get(page: number, itemsPerPage: number): Observable<IProduct> {
     return this.http
       .get<IProduct>(`${this.API_URL}/products`, {
         params: {
-          _per_page: limit,
           _page: page,
+          _per_page: itemsPerPage,
+          _sort: 'createdAt',
+          _order: 'desc',
         },
       })
       .pipe(take(1));
@@ -33,7 +35,7 @@ export class ProductService {
       .pipe(take(1));
   }
 
-  delete(id: number): Observable<IProductItem> {
+  delete(id: string): Observable<IProductItem> {
     return this.http
       .delete<IProductItem>(`${this.API_URL}/products/${id}`)
       .pipe(take(1));

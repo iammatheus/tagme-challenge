@@ -10,10 +10,14 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  get(page: number, itemsPerPage: number): Observable<IProduct> {
-    const params = new HttpParams()
+  get(page: number, itemsPerPage: number, term?: string): Observable<IProduct> {
+    let params = new HttpParams()
       .set('_page', page)
       .set('_per_page', itemsPerPage);
+
+    if (term) {
+      params = params.set('name', term);
+    }
 
     return this.http
       .get<IProduct>(`${this.API_URL}/products`, {

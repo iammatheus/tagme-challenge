@@ -1,0 +1,24 @@
+.toast {
+  position: absolute;
+  animation: fadeIn 0.3s ease;
+  bottom: 0.5rem;
+  right: 1rem;
+  word-break: break-all;
+  z-index: 1;
+}
+
+.button-container {
+  background-color: transparent;
+  border: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -23,6 +23,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ProductStore } from '../../store/product.store';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'product-modal',
@@ -38,6 +39,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     ImageCropperComponent,
     MatIcon,
     MatTooltip,
+    MatProgressSpinnerModule,
   ],
   styleUrl: './styles.scss',
 })
@@ -47,6 +49,7 @@ export class ProductModalComponent {
   form!: FormGroup;
   products!: Signal<IProduct>;
   invalidImage: boolean = false;
+  readonly loading = this.productStore.loading;
 
   imageChangedEvent: Event | null = null;
   croppedImage: string = '';
@@ -75,13 +78,19 @@ export class ProductModalComponent {
   }
 
   postProduct(product: IProductItem) {
-    this.productStore.add(product);
-    this.closeModal();
+    this.productStore.add(product).subscribe((success) => {
+      if (success) {
+        this.closeModal();
+      }
+    });
   }
 
   putProduct(product: IProductItem) {
-    this.productStore.update(product);
-    this.closeModal();
+    this.productStore.update(product).subscribe((success) => {
+      if (success) {
+        this.closeModal();
+      }
+    });
   }
 
   submitProduct() {

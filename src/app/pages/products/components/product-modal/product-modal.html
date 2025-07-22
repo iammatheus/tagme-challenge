@@ -77,9 +77,14 @@
   <button matButton mat-dialog-close cdkFocusInitial>Cancelar</button>
   <button
     matButton
-    [disabled]="form.invalid || !croppedImage"
+    [disabled]="form.invalid || !croppedImage || loading()"
     (click)="submitProduct()"
   >
-    Confirmar
+    <div class="d-flex justify-content-between align-items-center gap-2">
+      @if(loading()) {
+      <mat-spinner />
+      }
+      <span>Confirmar</span>
+    </div>
   </button>
 </mat-dialog-actions>

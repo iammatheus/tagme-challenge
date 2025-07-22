@@ -33,7 +33,7 @@ import { ProductFilterComponent } from '../product-filter/product-filter';
 export class ProductTableComponent {
   productStore = inject(ProductStore);
 
-  displayedColumns = ['name', 'description', 'image', 'actions'];
+  displayedColumns = ['image', 'name', 'description', 'actions'];
   startPageSize = 5;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

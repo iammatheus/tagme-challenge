@@ -1,6 +1,13 @@
 <mat-card class="p-4 bg-transparent">
   <product-filter />
   <table mat-table [dataSource]="products().data" class="bg-transparent mb-4">
+    <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef>Imagem</th>
+      <td mat-cell *matCellDef="let element" class="p-2">
+        <img [src]="element.image" width="64" height="64" />
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Nome</th>
       <td mat-cell *matCellDef="let element">{{ element.name }}</td>
@@ -9,11 +16,6 @@
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef>Descrição</th>
       <td mat-cell *matCellDef="let element">{{ element.description }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="image">
-      <th mat-header-cell *matHeaderCellDef>Imagem</th>
-      <td mat-cell *matCellDef="let element">{{ element.image }}</td>
     </ng-container>
 
     <ng-container matColumnDef="actions">

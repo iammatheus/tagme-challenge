@@ -6,14 +6,17 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { ProductStore } from '../../store/product.store';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'confirm-product-delete',
   templateUrl: './confirm.product.delete.html',
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, MatProgressSpinnerModule],
+  styleUrls: ['./styles.scss'],
 })
 export class ConfirmProductDeleteComponent {
   productStore = inject(ProductStore);
+  readonly loading = this.productStore.loading;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -22,7 +25,10 @@ export class ConfirmProductDeleteComponent {
   ) {}
 
   deleteProduct() {
-    this.productStore.remove(this.data.id);
-    this.dialogRef.close();
+    this.productStore.remove(this.data.id).subscribe((success) => {
+      if (success) {
+        this.dialogRef.close();
+      }
+    });
   }
 }

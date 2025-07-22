@@ -40,4 +40,5 @@ testem.log
 /typings
 
 .DS_Store
-Thumbs.db
+Thumbs.
+src/api/db.json

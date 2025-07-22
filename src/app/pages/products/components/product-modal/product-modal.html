@@ -1,1 +1,95 @@
-<h2>Modal</h2>
+<h2 mat-dialog-title>
+  {{ this.data ? "Editar produto" : "Cadastrar produto" }}
+</h2>
+<mat-dialog-content class="p-4">
+  <form [formGroup]="form">
+    <div class="mb-4">
+      @if(!imageChangedEvent && !productImage) {
+      <label for="file" class="file">
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileChange($event)"
+          id="file"
+          hidden
+        />
+        <mat-icon class="material-symbols-outlined"> image_search </mat-icon>
+        <h5>Selecione uma imagem</h5>
+      </label>
+      } @if(imageChangedEvent || productImage) {
+      <div class="img-container">
+        <button
+          matIconButton
+          type="button"
+          class="close-button"
+          matTooltip="Remover imagem"
+          (click)="removeImage()"
+        >
+          <mat-icon class="material-symbols-outlined">delete</mat-icon>
+        </button>
+
+        <image-cropper
+          [imageBase64]="data?.image"
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [aspectRatio]="1 / 1"
+          format="png"
+          (imageCropped)="onImageCropped($event)"
+        >
+        </image-cropper>
+      </div>
+      }
+    </div>
+
+    @if(invalidImage) {
+    <p class="text-danger font-weight-bold">
+      Selecione um tipo de imagem válido.
+    </p>
+    }
+
+    <div class="d-flex flex-column gap-2">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input
+          matInput
+          placeholder="Insira um nome para o produto"
+          formControlName="name"
+        />
+        @if (form.get('name')?.errors?.['required']) {
+        <mat-error>Nome é obrigatório.</mat-error>
+        } @if (form.get('name')?.errors?.['maxlength'] ) {
+        <mat-error>Nome deve ter no máximo 100 caracteres.</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Descrição</mat-label>
+        <textarea
+          matInput
+          placeholder="Insira uma descrição para o produto"
+          formControlName="description"
+          rows="5"
+        ></textarea>
+        @if (form.get('description')?.errors?.['required']) {
+        <mat-error>Descrição é obrigatória.</mat-error>
+        } @if (form.get('description')?.errors?.['maxlength'] ) {
+        <mat-error>Descrição deve ter no máximo 500 caracteres.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton mat-dialog-close cdkFocusInitial>Cancelar</button>
+  <button
+    matButton
+    [disabled]="form.invalid || !croppedImage || loading()"
+    (click)="submitProduct()"
+  >
+    <div class="d-flex justify-content-between align-items-center gap-2">
+      @if(loading()) {
+      <mat-spinner />
+      }
+      <span>Confirmar</span>
+    </div>
+  </button>
+</mat-dialog-actions>

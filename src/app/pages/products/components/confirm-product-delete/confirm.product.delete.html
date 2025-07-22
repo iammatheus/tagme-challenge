@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Deletar Produto</h2>
+<mat-dialog-content class="p-4">
+  <p class="fs-6">
+    Deseja realmente deletar o produto <b>{{ data.name }}</b> ?
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton mat-dialog-close>Cancelar</button>
+  <button
+    matButton
+    cdkFocusInitial
+    (click)="deleteProduct()"
+    [disabled]="loading()"
+  >
+    <div class="d-flex justify-content-between align-items-center gap-2">
+      @if(loading()) {
+      <mat-spinner />
+      }
+      <span>Confirmar</span>
+    </div>
+  </button>
+</mat-dialog-actions>

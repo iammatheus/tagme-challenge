@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { IProductItem } from '../../../../../core/interfaces/IProduct';
 import { MatCardModule } from '@angular/material/card';
@@ -7,43 +7,64 @@ import {
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
-import { ProductService } from '../../services/product.service';
-import { of } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmProductDeleteComponent } from '../confirm-product-delete/confirm.product.delete';
+import { ProductModalComponent } from '../product-modal/product-modal';
+import { ProductStore } from '../../store/product.store';
+import { ProductFilterComponent } from '../product-filter/product-filter';
 
 @Component({
   selector: 'product-table',
   templateUrl: './product-table.html',
-  imports: [MatTableModule, MatCardModule, MatPaginatorModule, AsyncPipe],
+  imports: [
+    MatTableModule,
+    MatCardModule,
+    MatPaginatorModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    ProductFilterComponent,
+  ],
+  styleUrl: './styles.scss',
 })
 export class ProductTableComponent {
-  data$ = of<IProductItem[]>([]);
-  displayedColumns = ['id', 'name', 'description', 'image'];
-  totalItems = 0;
-  pageSize = 5;
+  productStore = inject(ProductStore);
+
+  displayedColumns = ['image', 'name', 'description', 'actions'];
+  startPageSize = 5;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private productService: ProductService) {}
+  constructor(private matDialog: MatDialog) {}
+
+  readonly products = this.productStore.products;
+  readonly loading = this.productStore.loading;
 
   ngOnInit(): void {
-    this.getProductList(1, this.pageSize);
+    this.productStore.setPage(1);
+    this.productStore.setPageSize(this.startPageSize);
   }
 
   onPageChange(event: PageEvent): void {
-    this.getProductList(event.pageIndex + 1, event.pageSize);
+    const { pageIndex, pageSize } = event;
+    this.productStore.setPage(pageIndex + 1);
+    this.productStore.setPageSize(pageSize);
   }
 
-  getProductList(pageIndex: number, pageSize: number): void {
-    this.productService.get(pageIndex, pageSize).subscribe({
-      next: (res) => {
-        this.totalItems = res.items;
-        this.data$ = of(res.data);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error(error);
-      },
+  openProductEditModal(product: IProductItem) {
+    this.matDialog.open(ProductModalComponent, {
+      width: '600px',
+      data: product,
+    });
+  }
+
+  openProductDeleteModal({ id, name }: IProductItem) {
+    this.matDialog.open(ConfirmProductDeleteComponent, {
+      width: '600px',
+      data: { id, name },
     });
   }
 }

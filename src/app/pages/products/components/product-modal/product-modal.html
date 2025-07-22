@@ -55,8 +55,10 @@
           placeholder="Insira um nome para o produto"
           formControlName="name"
         />
-        @if (form.controls['name'].invalid) {
+        @if (form.get('name')?.errors?.['required']) {
         <mat-error>Nome é obrigatório.</mat-error>
+        } @if (form.get('name')?.errors?.['maxlength'] ) {
+        <mat-error>Nome deve ter no máximo 100 caracteres.</mat-error>
         }
       </mat-form-field>
       <mat-form-field appearance="outline">
@@ -65,9 +67,12 @@
           matInput
           placeholder="Insira uma descrição para o produto"
           formControlName="description"
+          rows="5"
         ></textarea>
-        @if (form.controls['description'].invalid) {
+        @if (form.get('description')?.errors?.['required']) {
         <mat-error>Descrição é obrigatória.</mat-error>
+        } @if (form.get('description')?.errors?.['maxlength'] ) {
+        <mat-error>Descrição deve ter no máximo 500 caracteres.</mat-error>
         }
       </mat-form-field>
     </div>

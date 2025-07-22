@@ -4,3 +4,25 @@ mat-icon {
   justify-content: center;
   align-items: center;
 }
+
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-name {
+  max-width: 150px;
+}
+
+.mat-column-description {
+  max-width: 300px;
+}
+
+.mat-column-image {
+  max-width: 100px;
+}
+
+.table-container {
+  overflow: auto;
+}

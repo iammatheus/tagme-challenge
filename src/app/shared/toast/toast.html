@@ -1,0 +1,33 @@
+@for(toast of toasts; track toast.type) {
+<button (click)="remove(toast)" class="button-container">
+  <div
+    class="toast text-white bg-{{ toast.type }} border-0 show mb-2"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="d-flex align-items-center p-1">
+      <div>
+        <mat-icon class="material-symbols-outlined">
+          {{ toastIcons[toast.type || "primary"] }}
+        </mat-icon>
+      </div>
+      <div class="d-flex flex-column px-2">
+        <div class="toast-body d-flex align-items-start flex-column p-0 py-2">
+          @if(toast.title) {
+          <h6>{{ toast.title }}</h6>
+          }
+
+          <span>{{ toast.message }}</span>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-1 m-auto"
+        aria-label="Close"
+        (click)="remove(toast)"
+      ></button>
+    </div>
+  </div>
+</button>
+}

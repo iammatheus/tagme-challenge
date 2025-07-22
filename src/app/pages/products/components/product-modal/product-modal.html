@@ -3,6 +3,50 @@
 </h2>
 <mat-dialog-content class="p-4">
   <form [formGroup]="form">
+    <div class="mb-4">
+      @if(!imageChangedEvent && !productImage) {
+      <label for="file" class="file">
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileChange($event)"
+          id="file"
+          hidden
+        />
+        <mat-icon class="material-symbols-outlined"> image_search </mat-icon>
+        <h5>Selecione uma imagem</h5>
+      </label>
+      } @if(imageChangedEvent || productImage) {
+      <div class="img-container">
+        <button
+          matIconButton
+          type="button"
+          class="close-button"
+          matTooltip="Remover imagem"
+          (click)="removeImage()"
+        >
+          <mat-icon class="material-symbols-outlined">delete</mat-icon>
+        </button>
+
+        <image-cropper
+          [imageBase64]="data?.image"
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [aspectRatio]="1 / 1"
+          format="png"
+          (imageCropped)="onImageCropped($event)"
+        >
+        </image-cropper>
+      </div>
+      }
+    </div>
+
+    @if(invalidImage) {
+    <p class="text-danger font-weight-bold">
+      Selecione um tipo de imagem válido.
+    </p>
+    }
+
     <div class="d-flex flex-column gap-2">
       <mat-form-field appearance="outline">
         <mat-label>Nome</mat-label>
@@ -31,7 +75,11 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button matButton mat-dialog-close cdkFocusInitial>Cancelar</button>
-  <button matButton [disabled]="form.invalid" (click)="submitProduct()">
+  <button
+    matButton
+    [disabled]="form.invalid || !croppedImage"
+    (click)="submitProduct()"
+  >
     Confirmar
   </button>
 </mat-dialog-actions>

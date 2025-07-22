@@ -62,9 +62,13 @@ export class ProductModalComponent {
 
   ngOnInit() {
     this.form = new FormGroup({
-      name: new FormControl(this.data?.name || '', [Validators.required]),
+      name: new FormControl(this.data?.name || '', [
+        Validators.required,
+        Validators.maxLength(100),
+      ]),
       description: new FormControl(this.data?.description || '', [
         Validators.required,
+        Validators.maxLength(500),
       ]),
       image: new FormControl(''),
     });
